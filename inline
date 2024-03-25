@@ -1,0 +1,89 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "972466e6",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Import all the important libraries\n",
+    "import numpy as np\n",
+    "import numba as nb \n",
+    "import matplotlib.pyplot as plt\n",
+    "\n",
+    "from sys_pde_no_growth import *"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "0d766e68",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Define all the system params\n",
+    "sys_params = np.zeros(16)\n",
+    "sys_params[0] = 1 # D_b\n",
+    "sys_params[1] = 1 # D_i\n",
+    "sys_params[2] = 1/5 # d_b\n",
+    "sys_params[3] = 1/10 # d_i\n",
+    "sys_params[4] = 1 # d_s\n",
+    "sys_params[5] = 1/8 # d_l\n",
+    "sys_params[6] = 1.4 # a_b_s\n",
+    "sys_params[7] = 1 # a_b_l\n",
+    "sys_params[8] = 0.08 # a_l_s\n",
+    "sys_params[9] = 0.7 # b_0\n",
+    "sys_params[10] = 0.2 #K_i\n",
+    "sys_params[11] = 1 # K_l\n",
+    "sys_params[12] = 0.1 # K_s\n",
+    "sys_params[13] = 1 # Hill coefficient (ask David)\n",
+    "sys_params[14] = 1 # A - pSmad edge effects\n",
+    "sys_params[15] = 0.1 # \\sigma - pSmad edge effects"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "1a7adda3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Define all the simulations params\n",
+    "sol_params = np.zeros(7)\n",
+    "sol_params[0] = 0.1 # dt \n",
+    "sol_params[1] = 0.1 # dx\n",
+    "sol_params[2] = 10/sol_params[1] # Lx\n",
+    "sol_params[3] = 10/sol_params[1] #Ly\n",
+    "sol_params[4] = 1/sol_params[1] # Radius of cell colony\n",
+    "sol_params[5] = 10/sol_params[0] # Total time, T\n",
+    "sol_params[6] = 1/sol_params[0] # Delta t (snapshot saving time)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "f8296c72",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Get the initial conditions\n",
+    "array_b, array_i, array_s, array_l = create_IC_1(sys_params, sol_params)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "3414a3e4",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data_b_time, data_i_time, data_s_time, data_l_time = run_and_save_sys(array_b, array_i, array_s, array_l, \n",
+    "                                                                      sys_params, sol_params)"
+   ]
+  }
+ ],
+ "metadata": {},
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
