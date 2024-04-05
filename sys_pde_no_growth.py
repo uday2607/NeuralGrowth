@@ -91,12 +91,19 @@ def solve_sys_pde_lhs(array_b, array_i, array_s, array_l, sys_params, sol_params
 
             # Update the conc on each mesh cell
             if in_circle:
+
+                # check if pSmad edge activation is present
+                if sol_params[9]:
+                    pSmad_del_value = pSmad_delta_values[i, j]
+                else:
+                    pSmad_del_value = 0.0    
+
                 # Update intra-cellular species too
                 new_array_b[i, j] += BMP_pde_rhs(array_b, array_s[i, j], array_l[i, j], sys_params, sol_params,
                                              i, j)*dt
                 new_array_i[i, j] += BMP_i_pde_rhs(array_i, array_s[i, j], sys_params, sol_params, i, j)*dt
                 new_array_s[i, j] += pSmad_pde_rhs(array_s[i,j], array_b[i, j], array_i[i, j], sys_params, 
-                                            i, j, pSmad_delta_values[i, j])*dt
+                                            i, j, pSmad_del_value)*dt
                 new_array_l[i, j] += Lmx1a_pde_rhs(array_l[i,j], array_s[i, j], sys_params, i, j)*dt
             else:
                 # Update only the diffusing species conc
