@@ -1,4 +1,4 @@
-from numba import jit, float64, int8, int32, types
+from numba import jit, float64, int8, int32, types, prange
 import numpy as np
 
 @jit(float64(float64[:,:], int32, int32, float64), nopython=True, nogil=True, cache=True,
@@ -72,7 +72,7 @@ def impose_Neumann_boundary(array_x, Lx, Ly):
 @jit(types.Tuple((float64[:,:],float64[:,:],float64[:,:],float64[:,:]))(float64[:,:], 
     float64[:,:], float64[:,:], float64[:,:], float64[::1], float64[::1], int8[:,::1],
     float64[:,:]), 
-    nopython=True, nogil=True, cache=True, error_model="numpy", fastmath=True)
+    nopython=True, nogil=True, cache=True, error_model="numpy", fastmath=True, parallel=True)
 def solve_sys_pde_lhs(array_b, array_i, array_s, array_l, sys_params, sol_params, in_circle_array,
                       pSmad_delta_values):
 
@@ -84,7 +84,7 @@ def solve_sys_pde_lhs(array_b, array_i, array_s, array_l, sys_params, sol_params
                                                           array_l.copy())
 
     # Iterate through all the non-ghost mesh cell and update them
-    for i in range(1, Lx-1):
+    for i in prange(1, Lx-1):
         for j in range(1, Ly-1):
             # check if the mesh cell is in the circle
             in_circle = in_circle_array[i, j]
